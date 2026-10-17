@@ -21,7 +21,7 @@ fi
 # 2. Instalace závislostí
 if [ ! -d "node_modules" ]; then
     echo -e "\033[0;36m[NPM]\033[0m Instaluji balíčky projektu..."
-    npm install
+    npm install --legacy-peer-deps
 fi
 
 # 3. Spuštění lokálního Python daemona (port 9099)
