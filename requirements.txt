@@ -1,0 +1,6 @@
+google-genai>=2.4.0
+langchain>=0.3.0
+crewai>=0.86.0
+rich>=13.9.0
+httpx>=0.28.0
+psutil>=6.1.0
