@@ -53,6 +53,8 @@ elif command -v google-chrome &>/dev/null; then
     exec google-chrome --app="http://localhost:3000" --name=jarvis
 elif command -v brave-browser &>/dev/null; then
     exec brave-browser --app="http://localhost:3000" --name=jarvis
+elif command -v opera &>/dev/null; then
+    exec opera --app="http://localhost:3000" --name=jarvis
 else
     exec xdg-open "http://localhost:3000"
 fi
