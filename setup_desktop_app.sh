@@ -51,23 +51,31 @@ fi
 # 2. Vytvoření spolehlivého spouštěcího skriptu jarvis-app.sh
 cat << 'EOF' > "$APP_DIR/jarvis-app.sh"
 #!/usr/bin/env bash
-APP_URL="https://ais-dev-wm6htdihxwwnyfh4qad3g4-410492439378.europe-west2.run.app"
-CORE_DIR="$HOME/jarvis-core"
+LOCAL_URL="http://localhost:3000"
+APP_URL="$LOCAL_URL"
+
+# Pokud neběží lokální server, spusť jej z ~/jarvis-local
+if ! curl -s --max-time 1 "$LOCAL_URL" >/dev/null 2>&1; then
+    if [ -f "$HOME/jarvis-local/run_local.sh" ]; then
+        nohup bash "$HOME/jarvis-local/run_local.sh" >/dev/null 2>&1 &
+        sleep 2
+    fi
+fi
 
 # Zkontroluj a spusť daemona, pokud ještě neběží
 if ! curl -s --max-time 1 http://127.0.0.1:9099/health >/dev/null 2>&1; then
-    nohup python3 "$CORE_DIR/jarvis_bridge.py" >/dev/null 2>&1 &
+    nohup python3 "$HOME/jarvis-local/jarvis_bridge.py" >/dev/null 2>&1 &
 fi
 
 # Otevři aplikaci v samostatném okně bez lišt (--app)
-if command -v google-chrome &>/dev/null; then
-    exec google-chrome --app="$APP_URL"
-elif command -v chromium &>/dev/null; then
-    exec chromium --app="$APP_URL"
+if command -v chromium &>/dev/null; then
+    exec chromium --app="$APP_URL" --name=jarvis
+elif command -v google-chrome &>/dev/null; then
+    exec google-chrome --app="$APP_URL" --name=jarvis
+elif command -v opera &>/dev/null; then
+    exec opera --app="$APP_URL" --name=jarvis
 elif command -v brave-browser &>/dev/null; then
-    exec brave-browser --app="$APP_URL"
-elif command -v firefox &>/dev/null; then
-    exec firefox --new-window "$APP_URL"
+    exec brave-browser --app="$APP_URL" --name=jarvis
 else
     exec xdg-open "$APP_URL"
 fi
